@@ -1,0 +1,75 @@
+/** @type {import('dependency-cruiser').IConfiguration} */
+module.exports = {
+  forbidden: [
+    {
+      name: 'no-circular',
+      severity: 'error',
+      comment: 'Cyklická závislost.',
+      from: {},
+      to: { circular: true },
+    },
+    {
+      name: 'no-orphans',
+      severity: 'warn',
+      comment: 'Osamocený modul.',
+      from: { orphan: true, pathNot: ['\\.d\\.ts$', '(^|/)index\\.ts$', '^src/main\\.ts$'] },
+      to: {},
+    },
+    {
+      name: 'domain-is-pure',
+      severity: 'error',
+      comment: 'domain neimportuje nic z appky.',
+      from: { path: '^src/domain/' },
+      to: { path: '^src/', pathNot: '^src/domain/' },
+    },
+    {
+      name: 'core-is-leaf',
+      severity: 'error',
+      comment: 'core neimportuje vrstvy (smí jen domain).',
+      from: { path: '^src/core/' },
+      to: { path: '^src/', pathNot: ['^src/core/', '^src/domain/'] },
+    },
+    {
+      name: 'repository-only-down',
+      severity: 'error',
+      comment: 'repository smí jen domain/core.',
+      from: { path: '^src/repository/' },
+      to: { path: '^src/(ui|api|service)/' },
+    },
+    {
+      name: 'service-only-down',
+      severity: 'error',
+      comment: 'service smí jen repository/domain/core.',
+      from: { path: '^src/service/' },
+      to: { path: '^src/(ui|api)/' },
+    },
+    {
+      name: 'api-only-down',
+      severity: 'error',
+      comment: 'api smí jen service/domain/core.',
+      from: { path: '^src/api/' },
+      to: { path: '^src/(ui|repository)/' },
+    },
+    {
+      name: 'ui-only-down',
+      severity: 'error',
+      comment: 'ui smí jen api/domain/core.',
+      from: { path: '^src/ui/' },
+      to: { path: '^src/(service|repository)/' },
+    },
+    {
+      name: 'cross-layer-via-barrel',
+      severity: 'error',
+      comment: 'Mezi vrstvami se importuje jen přes index.ts cílové vrstvy.',
+      from: { path: '^src/([^/]+)/' },
+      to: { path: '^src/[^/]+/', pathNot: ['^src/$1/', '(^|/)index\\.ts$'] },
+    },
+  ],
+  options: {
+    doNotFollow: { path: 'node_modules' },
+    tsConfig: { fileName: 'tsconfig.json' },
+    tsPreCompilationDeps: true,
+    includeOnly: '^src/',
+    exclude: { path: 'node_modules' },
+  },
+};

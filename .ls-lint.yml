@@ -1,0 +1,24 @@
+ls:
+  src:
+    .dir: kebab-case
+  src/core:
+    .ts: regex:[a-z0-9-]+ | regex:index
+  src/domain:
+    .ts: regex:[a-z0-9-]+\.(entity|vo|types) | regex:index
+    .test.ts: regex:[a-z0-9-]+\.(entity|vo|types)
+  src/repository:
+    .ts: regex:[a-z0-9-]+\.repository | regex:index
+    .test.ts: regex:[a-z0-9-]+\.repository
+  src/service:
+    .ts: regex:[a-z0-9-]+\.service | regex:index
+    .test.ts: regex:[a-z0-9-]+\.service
+  src/api:
+    .ts: regex:[a-z0-9-]+\.route | regex:index
+    .test.ts: regex:[a-z0-9-]+\.route
+  src/ui:
+    .tsx: PascalCase
+    .ts: regex:index
+    .test.tsx: PascalCase
+ignore:
+  - node_modules
+  - .git
