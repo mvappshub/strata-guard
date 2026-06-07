@@ -3,7 +3,7 @@ import eslint from '@eslint/js';
 import tseslint from 'typescript-eslint';
 
 export default tseslint.config(
-  { ignores: ['dist', 'coverage', 'node_modules', 'scripts', '.dependency-cruiser.cjs'] },
+  { ignores: ['dist', 'coverage', 'node_modules', 'scripts', 'tools', '.dependency-cruiser.cjs'] },
   eslint.configs.recommended,
   ...tseslint.configs.recommended,
   {

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>strata-guard viz</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; }
+    body { font-family: system-ui, sans-serif; background: #0f1419; color: #c9d1d9; }
+    header { padding: 0.75rem 1rem; border-bottom: 1px solid #30363d; font-size: 0.875rem; }
+    #canvas { width: 100%; height: calc(100vh - 2.5rem); overflow: auto; }
+    svg { display: block; min-width: 100%; }
+    .layer-label { fill: #8b949e; font-size: 12px; font-weight: 600; }
+    .chip { fill: #21262d; stroke: #30363d; stroke-width: 1; }
+    .chip-label { fill: #e6edf3; font-size: 11px; }
+    .edge { fill: none; stroke: #484f58; stroke-width: 1.5; }
+  </style>
+</head>
+<body>
+  <header>strata-guard — projekce <code>depcruise --output-type json src</code></header>
+  <div id="canvas"></div>
+  <script type="module" src="/app.js"></script>
+</body>
+</html>

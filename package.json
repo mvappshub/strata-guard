@@ -12,6 +12,7 @@
     "lint:deps": "depcruise src",
     "check:fanout": "node scripts/check-fanout.mjs",
     "test": "vitest run",
+    "viz": "node tools/viz/server.mjs",
     "verify": "pnpm type-check && pnpm lint && pnpm lint:names && pnpm lint:deps && pnpm check:fanout && pnpm test",
     "prepare": "husky"
   },

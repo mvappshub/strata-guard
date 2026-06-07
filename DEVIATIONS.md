@@ -17,7 +17,7 @@ Každý záměrný rozdíl oproti plánu je zde zdokumentován.
 | | |
 |---|---|
 | **Čeho se týká** | `ignores` v `eslint.config.mjs` |
-| **Co je jinak** | Navíc `scripts` a `.dependency-cruiser.cjs` |
+| **Co je jinak** | Navíc `scripts`, `tools` a `.dependency-cruiser.cjs` |
 | **Proč plán nemohl předvídat** | ESLint 10 s flat config lintuje `eslint .` včetně root skriptů; plán definuje pravidla jen pro `src/**`, ale příkaz `lint` pokrývá celý repozitář. Bez ignore padá na `module`/`process` v CommonJS/Node souborech. |
 
 ## Záměrné doplnění mimo plán
