@@ -1,0 +1,4 @@
+{
+  "render": ["ui", "api", "service", "repository"],
+  "leaf": ["domain", "core"]
+}
