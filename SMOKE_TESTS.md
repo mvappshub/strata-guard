@@ -118,3 +118,30 @@ $ depcruise src
   error api-only-down: src/api/user.route.ts → src/repository/user.repository.ts
 husky - pre-commit script failed (code 2)
 ```
+
+---
+
+## Refaktorová síť — orders feature (fáze C)
+
+**Cíl:** kontraktní testy na `@/service` zůstanou zelené přes rozdělení souboru ve vrstvě service.
+
+### Před rozdělením
+
+`order.service.ts` exportoval 8 funkcí → `pnpm check:fanout`:
+
+```
+WARN exporty: src/service/order.service.ts exportuje 8 věcí
+fan-out / exporty: WARN — zvaž rozdělení dotčených souborů.
+```
+
+`pnpm test src/service/order.service.test.ts` — 3 testy zelené.
+
+### Po rozdělení
+
+Výpočty přesunuty do `order-total.service.ts`, oba soubory re-exportovány přes `service/index.ts`. `order.service.test.ts` **beze změny**.
+
+`pnpm check:fanout` — bez WARN (exit 0).
+
+`pnpm test src/service/order.service.test.ts` — 3 testy zelené.
+
+**Závěr:** barrel `@/service` drží kontrakt; vnitřní struktura vrstvy se může měnit bez úpravy testů na hranici.
