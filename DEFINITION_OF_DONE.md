@@ -18,7 +18,9 @@ Musí projít: `type-check`, `lint`, `lint:names`, `lint:deps`, `check:fanout`, 
 |-------|----------|-------------------|
 | A | ui importuje repository | `lint:deps` → `ui-only-down` |
 | B | špatné jméno souboru | `lint:names` |
-| C | `process.env` mimo core (staged) | `lint-staged` / eslint `no-restricted-syntax` |
+| C | `process.env` mimo core (**staged**) | `lint-staged` / eslint `no-restricted-syntax` |
+
+**Poznámka k C:** nestaged porušení hook **neblokuje** (díra — viz `SMOKE_TESTS.md`); CI `pnpm lint` ano.
 | D | hluboký import mezi vrstvami | `lint:deps` → `cross-layer-via-barrel` |
 
 **Stav:** _(doplní se ve fázi 4)_

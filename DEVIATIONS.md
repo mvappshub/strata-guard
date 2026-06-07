@@ -70,4 +70,16 @@ Zdokumentováno v `DEFINITION_OF_DONE.md` jako vědomé rozhodnutí.
 
 ### `UserPage` — z `.tsx` na `.ts`
 
-Viz commit `fix: resolve tsx/react fragility` — prototyp bez UI runtime nemá React; `.tsx` bez JSX bylo křehké.
+| | |
+|---|---|
+| **Čeho se týká** | `src/ui/UserPage.tsx` z plánu |
+| **Co je jinak** | Soubor je `UserPage.ts`; `.ls-lint.yml` pro `src/ui` povoluje `PascalCase` u `.ts` místo `.tsx` |
+| **Proč** | Prototyp bez UI runtime nemá React; `.tsx` + `jsx: react-jsx` bez JSX a bez `@types/react` bylo křehké. |
+
+### Brána C — nestaged `process.env` (díra v pre-commit)
+
+| | |
+|---|---|
+| **Čeho se týká** | pre-commit hook vs. eslint na celém repu |
+| **Co se stalo** | Nestaged `process.env` mimo `core` commit **neblokuje** — viz `SMOKE_TESTS.md` sekce C-unstaged |
+| **Proč plán nemohl předvídat** | Plán definuje `lint-staged` jen na staged souborech; plná kontrola `process.env` je v `pnpm lint` / CI, ne v hooku pro nestaged změny. |

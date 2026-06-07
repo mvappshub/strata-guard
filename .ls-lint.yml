@@ -16,9 +16,7 @@ ls:
     .ts: regex:[a-z0-9-]+\.route | regex:index
     .test.ts: regex:[a-z0-9-]+\.route
   src/ui:
-    .tsx: PascalCase
-    .ts: regex:index
-    .test.tsx: PascalCase
+    .ts: PascalCase | regex:index
 ignore:
   - node_modules
   - .git
