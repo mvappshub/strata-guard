@@ -1,3 +1,5 @@
+import { edgeStroke } from '/edge-color.mjs';
+
 const CHIP_W = 140;
 const CHIP_H = 28;
 const CHIP_GAP = 8;
@@ -36,11 +38,15 @@ function placeChips(layer, files, x0, y0) {
   return pos;
 }
 
-async function loadAndRender() {
-  const [graph, layers] = await Promise.all([
+export async function loadAndRender() {
+  const [graph, layers, marks] = await Promise.all([
     fetch('/graph.json').then((r) => r.json()),
     fetch('/strata.layers.json').then((r) => r.json()),
+    fetch('/viz-marks.json').then((r) => r.json()),
   ]);
+
+  const fanOutSet = new Set(marks.fanOut);
+  const exportWarnSet = new Set(marks.exportWarn);
 
   const { render, leaf } = layers;
   const byLayer = layoutModules(graph.modules, render, leaf);
@@ -95,6 +101,7 @@ async function loadAndRender() {
       const mx = (x1 + x2) / 2;
       line.setAttribute('d', `M ${x1} ${y1} C ${mx} ${y1}, ${mx} ${y2}, ${x2} ${y2}`);
       line.setAttribute('class', 'edge');
+      line.setAttribute('stroke', edgeStroke(dep));
       edgesG.appendChild(line);
     }
   }
@@ -150,6 +157,13 @@ async function loadAndRender() {
     rect.setAttribute('height', String(CHIP_H));
     rect.setAttribute('rx', '4');
     rect.setAttribute('class', 'chip');
+    if (fanOutSet.has(path)) {
+      rect.setAttribute('stroke', '#d29922');
+      rect.setAttribute('stroke-width', '2');
+    } else if (exportWarnSet.has(path)) {
+      rect.setAttribute('stroke', '#d29922');
+      rect.setAttribute('stroke-dasharray', '4 2');
+    }
     const text = document.createElementNS(ns, 'text');
     text.setAttribute('x', String(pos.x + 6));
     text.setAttribute('y', String(pos.y + CHIP_H / 2 + 4));
