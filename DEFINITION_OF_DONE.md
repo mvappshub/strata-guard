@@ -18,12 +18,11 @@ Musí projít: `type-check`, `lint`, `lint:names`, `lint:deps`, `check:fanout`, 
 |-------|----------|-------------------|
 | A | ui importuje repository | `lint:deps` → `ui-only-down` |
 | B | špatné jméno souboru | `lint:names` |
-| C | `process.env` mimo core (**staged**) | `lint-staged` / eslint `no-restricted-syntax` |
-
-**Poznámka k C:** nestaged porušení hook **neblokuje** (díra — viz `SMOKE_TESTS.md`); CI `pnpm lint` ano.
+| C-staged | `process.env` mimo core, staged | `lint-staged` nebo `lint:env` |
+| C-unstaged | `process.env` mimo core, nestaged | `lint:env` (`eslint src`) |
 | D | hluboký import mezi vrstvami | `lint:deps` → `cross-layer-via-barrel` |
 
-**Stav:** částečně nesplněno — A, B, C-staged, D blokují commit (důkaz `SMOKE_TESTS.md`). **C-unstaged projde** — díra v pre-commit, ne opraveno (záměrně nahlášeno).
+**Stav:** _(doplní se ve fázi 8)_
 
 ## 3. CI workflow `verify`
 
@@ -35,7 +34,7 @@ Musí projít: `type-check`, `lint`, `lint:names`, `lint:deps`, `check:fanout`, 
 
 **Ověření:** diff proti implementačnímu plánu je buď nulový, nebo každý rozdíl je v `DEVIATIONS.md` (co / proč).
 
-**Stav:** splněno — všechny odchylky v `DEVIATIONS.md` včetně díry C-unstaged.
+**Stav:** _(doplní se ve fázi 8)_
 
 ## 5. Reprodukovatelnost závislostí
 
@@ -45,8 +44,8 @@ Musí projít: `type-check`, `lint`, `lint:names`, `lint:deps`, `check:fanout`, 
 
 ## Vědomé rozhodnutí: pre-commit vs. CI
 
-Pre-commit hook spouští: `lint-staged` (eslint na staged souborech), `lint:names`, `lint:deps`.
+Pre-commit hook spouští: `lint-staged` (autofix na staged), `lint:env` (celý `src/` — brána C), `lint:names`, `lint:deps`.
 
-`pnpm verify` / CI navíc spouští: `type-check`, `check:fanout`, `test`.
+**Vědomě mimo hook:** `type-check`, `check:fanout`, `test` — zůstávají jen v `pnpm verify` / CI kvůli rychlosti commitu.
 
-**Důsledek:** commit může projít lokálně i s chybami typů nebo padajícími testy; CI je úplná brána. Záměr — rychlý lokální commit, plná kontrola až v CI.
+**Důsledek:** strukturální brány (A–D) blokují commit vždy; typy, fan-out WARN a testy chytá až CI. Záměr, ne náhoda.

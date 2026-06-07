@@ -76,10 +76,10 @@ Zdokumentováno v `DEFINITION_OF_DONE.md` jako vědomé rozhodnutí.
 | **Co je jinak** | Soubor je `UserPage.ts`; `.ls-lint.yml` pro `src/ui` povoluje `PascalCase` u `.ts` místo `.tsx` |
 | **Proč** | Prototyp bez UI runtime nemá React; `.tsx` + `jsx: react-jsx` bez JSX a bez `@types/react` bylo křehké. |
 
-### Brána C — nestaged `process.env` (díra v pre-commit)
+### Brána C — nestaged `process.env`
 
 | | |
 |---|---|
 | **Čeho se týká** | pre-commit hook vs. eslint na celém repu |
-| **Co se stalo** | Nestaged `process.env` mimo `core` commit **neblokuje** — viz `SMOKE_TESTS.md` sekce C-unstaged |
-| **Proč plán nemohl předvídat** | Plán definuje `lint-staged` jen na staged souborech; plná kontrola `process.env` je v `pnpm lint` / CI, ne v hooku pro nestaged změny. |
+| **Stav** | **Vyřešeno ve fázi 5** — pre-commit pouští `pnpm lint:env` (`eslint src`) na celý strom po `lint-staged`. |
+| **Důkaz** | `SMOKE_TESTS.md` — C-unstaged v2 selže na `lint:env` i bez staged souborů. |
