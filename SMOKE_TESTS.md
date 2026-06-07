@@ -145,3 +145,18 @@ Výpočty přesunuty do `order-total.service.ts`, oba soubory re-exportovány p�
 `pnpm test src/service/order.service.test.ts` — 3 testy zelené.
 
 **Závěr:** barrel `@/service` drží kontrakt; vnitřní struktura vrstvy se může měnit bez úpravy testů na hranici.
+
+---
+
+## Orders — ui → repository (fáze D)
+
+**Změna:** `import { findOrdersByUser } from '@/repository'` v `src/ui/OrderPage.ts`, staged.
+
+**Příkaz:** `git commit -m "smoke: orders ui-only-down"`
+
+**Výsledek:** commit **selhal** (exit 1).
+
+```
+  error ui-only-down: src/ui/OrderPage.ts → src/repository/index.ts
+husky - pre-commit script failed (code 1)
+```
