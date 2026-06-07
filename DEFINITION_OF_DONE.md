@@ -8,7 +8,7 @@ Kontrolní seznam. Projekt je hotový, až když jsou splněny všechny položky
 
 Musí projít: `type-check`, `lint`, `lint:names`, `lint:deps`, `check:fanout`, `test`.
 
-**Stav:** _(doplní se ve fázi 4)_
+**Stav:** splněno — `pnpm install --frozen-lockfile && pnpm verify` exit 0 (2025-06-07).
 
 ## 2. Brány A–D blokují reálný `git commit`
 
@@ -23,25 +23,25 @@ Musí projít: `type-check`, `lint`, `lint:names`, `lint:deps`, `check:fanout`, 
 **Poznámka k C:** nestaged porušení hook **neblokuje** (díra — viz `SMOKE_TESTS.md`); CI `pnpm lint` ano.
 | D | hluboký import mezi vrstvami | `lint:deps` → `cross-layer-via-barrel` |
 
-**Stav:** _(doplní se ve fázi 4)_
+**Stav:** částečně nesplněno — A, B, C-staged, D blokují commit (důkaz `SMOKE_TESTS.md`). **C-unstaged projde** — díra v pre-commit, ne opraveno (záměrně nahlášeno).
 
 ## 3. CI workflow `verify`
 
 **Ověření:** push na GitHub spustí `.github/workflows/ci.yml` s `pnpm install --frozen-lockfile` a `pnpm verify`. V tomto prostředí GitHub Actions neběží — platí lokální ekvivalent: stejné příkazy jako v CI jobu `verify`.
 
-**Stav:** _(doplní se ve fázi 4)_
+**Stav:** splněno lokálně — GitHub Actions neběželo; ekvivalent: `pnpm install --frozen-lockfile && pnpm verify` (stejné jako `.github/workflows/ci.yml`).
 
 ## 4. Žádná nezdokumentovaná odchylka od plánu
 
 **Ověření:** diff proti implementačnímu plánu je buď nulový, nebo každý rozdíl je v `DEVIATIONS.md` (co / proč).
 
-**Stav:** _(doplní se ve fázi 4)_
+**Stav:** splněno — všechny odchylky v `DEVIATIONS.md` včetně díry C-unstaged.
 
 ## 5. Reprodukovatelnost závislostí
 
 **Ověření:** `pnpm-lock.yaml` je v gitu; `pnpm install --frozen-lockfile` projde bez chyby.
 
-**Stav:** _(doplní se ve fázi 4)_
+**Stav:** splněno — `pnpm-lock.yaml` v gitu; `pnpm install --frozen-lockfile` exit 0 po smazání `node_modules/`.
 
 ## Vědomé rozhodnutí: pre-commit vs. CI
 
