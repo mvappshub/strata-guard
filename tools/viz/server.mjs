@@ -1,13 +1,17 @@
 import { execFileSync } from 'node:child_process';
-import { createReadStream, readFileSync } from 'node:fs';
+import { createReadStream } from 'node:fs';
 import { createServer } from 'node:http';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import chokidar from 'chokidar';
 import { marksFromGraph } from './fanout.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(HERE, '../..');
 const PUBLIC = join(HERE, 'public');
+
+const sseClients = new Set();
+let debounceTimer;
 
 function depcruiseGraph() {
   const raw = execFileSync('pnpm', ['exec', 'depcruise', '--output-type', 'json', 'src'], {
@@ -23,8 +27,31 @@ function serveFile(res, path, contentType) {
   createReadStream(path).pipe(res);
 }
 
+function broadcastRefresh() {
+  for (const res of sseClients) {
+    res.write('data: refresh\n\n');
+  }
+}
+
+chokidar.watch(join(ROOT, 'src'), { ignoreInitial: true }).on('all', () => {
+  clearTimeout(debounceTimer);
+  debounceTimer = setTimeout(broadcastRefresh, 200);
+});
+
 const server = createServer((req, res) => {
   const url = new URL(req.url ?? '/', 'http://localhost');
+
+  if (url.pathname === '/events') {
+    res.writeHead(200, {
+      'Content-Type': 'text/event-stream',
+      'Cache-Control': 'no-cache',
+      Connection: 'keep-alive',
+    });
+    res.write(': connected\n\n');
+    sseClients.add(res);
+    req.on('close', () => sseClients.delete(res));
+    return;
+  }
 
   if (url.pathname === '/graph.json') {
     res.writeHead(200, { 'Content-Type': 'application/json' });

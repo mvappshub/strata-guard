@@ -185,3 +185,10 @@ export async function loadAndRender() {
 loadAndRender().catch((e) => {
   document.getElementById('canvas').textContent = String(e);
 });
+
+const events = new EventSource('/events');
+events.onmessage = () => {
+  loadAndRender().catch((e) => {
+    document.getElementById('canvas').textContent = String(e);
+  });
+};
